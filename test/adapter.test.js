@@ -25,7 +25,7 @@ const customAdapter = new Adapter(
           return '<p class="foo">{content}</p>'
         }
       },
-      attributes: {
+      span: {
         link: attributes => {
           return `<div data-foo="${attributes.href}">Lalala</div>{content}`
         }
@@ -95,6 +95,13 @@ test('handles simple link text', {todo: false}, t => {
   const input = require('./fixtures/link-simple-text.json')
   const expected = '<p>String before link <a href="http://icanhas.cheezburger.com/">actual link text</a> the rest</p>'
   t.same(adapter.parse(input), expected)
+  t.end()
+})
+
+test('handles simple link text with custom content handler', {todo: false}, t => {
+  const input = require('./fixtures/link-simple-text.json')
+  const expected = '<p class="foo">String before link <div data-foo="http://icanhas.cheezburger.com/">Lalala</div>actual link text the rest</p>'
+  t.same(customAdapter.parse(input), expected)
   t.end()
 })
 
