@@ -1,21 +1,9 @@
-const objectHandlers = {
-  link: object => {
-    return {
-      head: `<a href="${object.href}">`,
-      tail: '</a>'
-    }
-  }
+function isPrimitive(val) {
+  const type = typeof val
+  return val === null || (type !== 'object' && type !== 'function')
 }
 
-const textHandlers = {
-  normal: node => {
-    return '<p>{text}</p>'
-  }
-}
-
-const typeHandlers = {}
-
-function getContent(content) {
+function getContent(content, typeHandlers) {
   let output = ''
   content.forEach(item => {
     if (typeof item === 'string') {
@@ -28,24 +16,36 @@ function getContent(content) {
   return output
 }
 
-function attributesToHeadAndTail(attributes) {
+function getListItems(items, listHandlers, typeHandlers) {
+  let output = ''
+  items.forEach(item => {
+    if (typeof item === 'string') {
+      output += item
+    } else {
+      const contentHandler = typeHandlers[item.type] || typeHandlers.text
+      output += listHandlers.listItem(item).replace('{content}', contentHandler(item))
+    }
+  })
+  return output
+}
+
+function attributesToHeadAndTail(attributes, spanHandlers) {
   let head = ''
   let tail = ''
   Object.keys(attributes).forEach(aKey => {
-    if (objectHandlers[aKey]) {
-      const handled = objectHandlers[aKey](attributes[aKey])
-      head += handled.head
-      tail = handled.tail + tail
+    // If there is a registered handler for this attribute
+    if (spanHandlers[aKey]) {
+      const wrappedContent = spanHandlers[aKey](attributes[aKey]).split('{content}')
+      head += wrappedContent[0] || ''
+      tail = (wrappedContent[1] || '') + tail
     } else {
-      const isString = typeof attributes[aKey] === 'string'
-      const debugValue = isString
+    // Output a comment with metainfo
+      const primitive = isPrimitive(attributes[aKey])
+      const metaValue = primitive
         ? attributes[aKey]
         : JSON.stringify(attributes[aKey]).replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0')
-      head += `<span data-object-name="${aKey}" data-object-value="${debugValue}">`
-      if (isString) {
-        head += debugValue
-      }
-      tail = `</span>${tail}`
+      head += `<span data-unhandled-attribute-name="${aKey}" data-unhandled-attribute-value="${metaValue}" />`
+      tail = ''
     }
   })
   return {
@@ -54,35 +54,71 @@ function attributesToHeadAndTail(attributes) {
   }
 }
 
-typeHandlers.block = node => {
-  if (textHandlers[node.style]) {
-    return textHandlers[node.style](node).replace('{text}', getContent(node.content))
-  }
-  return `<span>${getContent(node.content)}</span>`
-}
+export default function (contentHandlers = {}) {
 
-typeHandlers.span = node => {
-  let head = ''
-  let tail = ''
-  if (node.mark) {
-    head += `<${node.mark}>`
-    tail = `</${node.mark}>`
+  const blockHandlers = {
+    normal: node => {
+      return '<p>{content}</p>'
+    },
+    ...contentHandlers.block || {}
   }
-  if (node.attributes) {
-    const attrHeadAndTail = attributesToHeadAndTail(node.attributes, head, tail)
-    head += attrHeadAndTail.head
-    tail = attrHeadAndTail.tail + tail
+
+  const spanHandlers = {
+    link: attributes => {
+      return `<a href="${attributes.href}">{content}</a>`
+    },
+    ...contentHandlers.span || {}
   }
-  return `${head}${getContent(node.content)}${tail}`
-}
 
-typeHandlers.object = node => {
-  const {head, tail} = attributesToHeadAndTail(node.attributes)
-  return `${head}${tail}`
-}
+  const listHandlers = {
+    number: node => {
+      return '<ol>{content}</ol>'
+    },
+    bullet: node => {
+      return '<ul>{content}</ul>'
+    },
+    listItem: node => {
+      return '<li>{content}</li>'
+    },
+    ...contentHandlers.list || {}
+  }
 
-export default function (customNodeHandlers = {}) {
-  Object.assign(objectHandlers, customNodeHandlers.object || {})
-  Object.assign(textHandlers, customNodeHandlers.text || {})
+  const typeHandlers = {
+
+    block: node => {
+      if (blockHandlers[node.style]) {
+        return blockHandlers[node.style](node).replace('{content}', getContent(node.content, typeHandlers))
+      }
+      return `<${node.style}>${getContent(node.content, typeHandlers)}</${node.style}>`
+    },
+
+    list: node => {
+      if (listHandlers[node.itemStyle]) {
+        return listHandlers[node.itemStyle](node)
+          .replace('{content}', getListItems(node.items, listHandlers, typeHandlers))
+      }
+      return `<ul>${getListItems(node.items, listHandlers, typeHandlers)}</ul>`
+    },
+
+    span: node => {
+      let head = ''
+      let tail = ''
+      if (node.mark) {
+        head += `<${node.mark}>`
+        tail = `</${node.mark}>`
+      }
+      if (node.attributes) {
+        const attrHeadAndTail = attributesToHeadAndTail(node.attributes, spanHandlers)
+        head += attrHeadAndTail.head
+        tail = attrHeadAndTail.tail + tail
+      }
+      return `${head}${getContent(node.content, typeHandlers)}${tail}`
+    },
+    object: node => {
+      const {head, tail} = attributesToHeadAndTail(node.attributes, spanHandlers)
+      return `${head}${tail}`
+    }
+  }
+
   return typeHandlers
 }

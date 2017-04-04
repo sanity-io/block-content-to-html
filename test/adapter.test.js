@@ -3,24 +3,35 @@
 import {test} from 'tap'
 import Adapter from '../src/Adapter.js'
 
-let adapter = new Adapter(
-  // {
-  //   customNodeHandlers: {
-  //     text: {
-  //       normal: node => {
-  //         return '<p class="normal">{text}</p>'
-  //       }
-  //     },
-  //     object: {
-  //       link: object => {
-  //         return {
-  //           head: `<a className='lala' href="${object.href}">`,
-  //           tail: '</a>'
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+const adapter = new Adapter()
+const customAdapter = new Adapter(
+  {
+    typeHandlers: {
+      author: node => {
+        return `<div>${node.attributes.name}</div>`
+      }
+    },
+    contentHandlers: {
+      list: {
+        number: node => {
+          return '<ol class="foo">{content}</ol>'
+        },
+        listItem: node => {
+          return '<li class="foo">{content}</li>'
+        }
+      },
+      block: {
+        normal: node => {
+          return '<p class="foo">{content}</p>'
+        }
+      },
+      attributes: {
+        link: attributes => {
+          return `<div data-foo="${attributes.href}">Lalala</div>{content}`
+        }
+      }
+    }
+  }
 )
 
 test('handles a plain string block', {todo: false}, t => {
@@ -31,6 +42,13 @@ test('handles a plain string block', {todo: false}, t => {
   t.end()
 })
 
+test('handles a plain string block with custom contentHandler', {todo: false}, t => {
+  const input = require('./fixtures/plain-text.json')
+  const expected = '<p class="foo">Normal string of text.</p>'
+  const got = customAdapter.parse(input)
+  t.same(got, expected)
+  t.end()
+})
 
 test('handles italicized text', {todo: false}, t => {
   const input = require('./fixtures/italicized-text.json')
@@ -76,235 +94,73 @@ test('handles a messy text', {todo: false}, t => {
 test('handles simple link text', {todo: false}, t => {
   const input = require('./fixtures/link-simple-text.json')
   const expected = '<p>String before link <a href="http://icanhas.cheezburger.com/">actual link text</a> the rest</p>'
-  // const expected = {
-  //   type: 'text',
-  //   style: 'plain',
-  //   content: [
-  //     'String before link ',
-  //     {
-  //       type: 'object',
-  //       attributes: {
-  //         link: {
-  //           href: 'http://icanhas.cheezburger.com/'
-  //         }
-  //       },
-  //       content: [
-  //         'actual link text'
-  //       ]
-  //     },
-  //     ' the rest'
-  //   ]
-  // }
   t.same(adapter.parse(input), expected)
   t.end()
 })
 
-// test('handles messy link text', {todo: false}, t => {
-//   const input = require('./fixtures/link-messy-text.json')
-//   const expected = {
-//     type: 'text',
-//     style: 'plain',
-//     content: [
-//       'String with link to ',
-//       {
-//         type: 'object',
-//         attributes: {
-//           link: {
-//             href: 'http://icanhas.cheezburger.com/'
-//           }
-//         },
-//         content: [
-//           'internet '
-//         ]
-//       },
-//       {
-//         content: [
-//           {
-//             content: [
-//               {
-//                 type: 'object',
-//                 attributes: {
-//                   link: {
-//                     href: 'http://icanhas.cheezburger.com/'
-//                   }
-//                 },
-//                 content: [
-//                   'is very strong and emphasis'
-//                 ]
-//               }
-//             ],
-//             type: 'strong'
-//           },
-//           {
-//             type: 'object',
-//             attributes: {
-//               link: {
-//                 href: 'http://icanhas.cheezburger.com/'
-//               }
-//             },
-//             content: [
-//               ' and just emphasis'
-//             ]
-//           }
-//         ],
-//         type: 'em'
-//       },
-//       '.'
-//     ]
-//   }
-//   t.same(adapter.parse(input), expected)
-//   t.end()
-// })
+test('handles messy link text', {todo: false}, t => {
+  const input = require('./fixtures/link-messy-text.json')
+  const expected = '<p>String with link to <a href="http://icanhas.cheezburger.com/">internet </a>'
+    + '<em><strong><a href="http://icanhas.cheezburger.com/">is very strong and emphasis</a></strong>'
+    + '<a href="http://icanhas.cheezburger.com/"> and just emphasis</a></em>.</p>'
+  t.same(adapter.parse(input), expected)
+  t.end()
+})
 
-// test('handles a numbered list', {todo: false}, t => {
-//   const input = require('./fixtures/list-numbered-blocks.json')
-//   const expected = [{
-//     type: 'list',
-//     style: 'number',
-//     items: [
-//       {
-//         type: 'text',
-//         content: [
-//           'One'
-//         ]
-//       },
-//       {
-//         type: 'text',
-//         content: [
-//           'Two has ',
-//           {
-//             type: 'strong',
-//             content: [
-//               'bold'
-//             ]
-//           },
-//           ' word'
-//         ]
-//       },
-//       {
-//         type: 'text',
-//         content: [
-//           'Three'
-//         ]
-//       }
-//     ]
-//   }]
-//   t.same(adapter.parse(input), expected)
-//   t.end()
-// })
+test('handles a numbered list', {todo: false}, t => {
+  const input = require('./fixtures/list-numbered-blocks.json')
+  const expected = '<ol><li><p>One</p></li><li><p>Two has <strong>bold</strong> word</p></li><li><p>Three</p></li></ol>'
+  t.same(adapter.parse(input), expected)
+  t.end()
+})
+
+test('handles a numbered list with custom content handler', {todo: false}, t => {
+  const input = require('./fixtures/list-numbered-blocks.json')
+  const expected = '<ol class="foo"><li class="foo"><p class="foo">One</p></li>'
+    + '<li class="foo"><p class="foo">Two has <strong>bold</strong> word</p></li>'
+    + '<li class="foo"><p class="foo">Three</p></li></ol>'
+  t.same(customAdapter.parse(input), expected)
+  t.end()
+})
 
 
-// test('handles a bulleted list', {todo: false}, t => {
-//   const input = require('./fixtures/list-bulleted-blocks.json')
-//   const expected = [{
-//     type: 'list',
-//     style: 'bullet',
-//     items: [
-//       {
-//         type: 'text',
-//         content: [
-//           'I am the most'
-//         ]
-//       },
-//       {
-//         type: 'text',
-//         content: [
-//           'expressive',
-//           {
-//             type: 'strong',
-//             content: [
-//               'programmer'
-//             ]
-//           },
-//           'you know.'
-//         ]
-//       },
-//       {
-//         type: 'text',
-//         content: [
-//           'SAD!'
-//         ]
-//       }
-//     ]
-//   }]
-//   t.same(adapter.parse(input), expected)
-//   t.end()
-// })
+test('handles a bulleted list', {todo: false}, t => {
+  const input = require('./fixtures/list-bulleted-blocks.json')
+  const expected = '<ul><li><p>I am the most</p></li><li><p>expressive<strong>programmer</strong>you know.</p>'
+    + '</li><li><p>SAD!</p></li></ul>'
+  t.same(adapter.parse(input), expected)
+  t.end()
+})
 
-// test('handles multiple lists', {todo: false}, t => {
-//   const input = require('./fixtures/list-both-types-blocks.json')
-//   const expected = [
-//     {
-//       type: 'list',
-//       style: 'bullet',
-//       items: [
-//         {
-//           type: 'text',
-//           content: [
-//             'A single bulleted item'
-//           ]
-//         }
-//       ]
-//     },
-//     {
-//       type: 'list',
-//       style: 'number',
-//       items: [
-//         {
-//           type: 'text',
-//           content: [
-//             'First numbered'
-//           ]
-//         },
-//         {
-//           type: 'text',
-//           content: [
-//             'Second numbered'
-//           ]
-//         }
-//       ]
-//     },
-//     {
-//       type: 'list',
-//       style: 'bullet',
-//       items: [
-//         {
-//           type: 'text',
-//           content: [
-//             'A bullet with',
-//             {
-//               type: 'strong',
-//               content: [
-//                 'something strong'
-//               ]
-//             }
-//           ]
-//         }
-//       ]
-//     }
-//   ]
-//   t.same(adapter.parse(input), expected)
-//   t.end()
-// })
+test('handles multiple lists', {todo: false}, t => {
+  const input = require('./fixtures/list-both-types-blocks.json')
+  const expected = '<ul><li><p>A single bulleted item</p></li></ul>\n'
+    + '<ol><li><p>First numbered</p></li><li><p>Second numbered</p></li></ol>\n'
+    + '<ul><li><p>A bullet with<strong>something strong</strong></p></li></ul>'
+  t.same(adapter.parse(input), expected)
+  t.end()
+})
 
-// test('handles a plain h2 block', {todo: false}, t => {
-//   const input = require('./fixtures/h2-text.json')
-//   const expected = {
-//     type: 'text',
-//     style: 'h2',
-//     content: [
-//       'Such h2 header, much amaze'
-//     ]
-//   }
-//   t.same(adapter.parse(input), expected)
-//   t.end()
-// })
+test('handles a plain h2 block', {todo: false}, t => {
+  const input = require('./fixtures/h2-text.json')
+  const expected = '<h2>Such h2 header, much amaze</h2>'
+  t.same(adapter.parse(input), expected)
+  t.end()
+})
 
 
-test('handles a non-block type', {todo: false}, t => {
-  const input = require('./fixtures/non-block.json')
-  const expected = '<span data-object-name="name" data-object-value="Test Person">Test Person</span>'
+test('handles a custom block type without a registered handler', {todo: false}, t => {
+  const input = require('./fixtures/custom-block.json')
+  const expected = '<span data-unhandled-attribute-name="name" data-unhandled-attribute-value="Test Person" />'
   const got = adapter.parse(input)
+  t.same(got, expected)
+  t.end()
+})
+
+test('handles a custom block type with a custom registered handler', {todo: false}, t => {
+  const input = require('./fixtures/custom-block.json')
+  const expected = '<div>Test Person</div>'
+  const got = customAdapter.parse(input)
   t.same(got, expected)
   t.end()
 })
