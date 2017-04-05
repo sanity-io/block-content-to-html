@@ -81,23 +81,12 @@ The ``node`` in this example has the following structure:
 
 ### ``blockTypeHandlers: Object``
 
-Handlers for manipulating the output of the default, built in block types.
-The default block type hold either a block of text or a list.
-The a text block is built up of spans (with marks), where a list block is built up of list items,
-which again can contain blocks of text.
+Handlers for manipulating the output of the default, built in, block types.
+The default block type holds either a block of text or a list.
+A text block is built up of spans (with marks), where a list block is built up of list items,
+which can contain a text block.
 
 The ``blockTypeHandlers`` object can contain the follow keys:
-
-#### ``marks: Object``
-Marks are by default mapped 1:1. If the mark is 'em' the output will be ``<em>``.
-With this option you can map marks to other tags, or just ignore them:
-
-```
-marks: {
-  em: null // Just igonore 'em' tags.
-  code: 'pre' // Render 'code' marks to 'pre' tags
-}
-```
 
 #### ``textBlock: Object``
 Each text block has a ``style``. With this option you can manipulate how each style is rendered.
@@ -158,6 +147,18 @@ span: node => {
   return result
 }
 ```
+
+#### ``marks: Object``
+Marks are by default mapped 1:1. If the mark is 'em' the output will be ``<em>``.
+With this option you can map marks to other tags, or just ignore them:
+
+```
+marks: {
+  em: null // Just igonore 'em' tags.
+  code: 'pre' // Render 'code' marks to 'pre' tags
+}
+```
+
 
 ## More information / examples
 
