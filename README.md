@@ -8,7 +8,7 @@ Converts the flat Sanity block content structure into HTML.
 
 ## Quick example
 
-```
+```js
 
 // The flat block content structure
 const data = {
@@ -45,7 +45,7 @@ const html = adapter.parse(data)
 
 This will result in ``html`` being:
 
-```
+```html
 <p>String with an <em>italicized</em> word.</p>
 ```
 
@@ -54,7 +54,9 @@ This will result in ``html`` being:
 
 The constructor will take an object for options:
 
-``new Adapter(options: Object)``
+```js
+new Adapter(options: Object)
+```
 
 ### Options
 
@@ -66,7 +68,7 @@ An object with keys for your custom block types (which is not of type ``block``)
 Each key is mapped to a type, and their value is a function which will get the node as input.
 It returns HTML.
 
-```
+```js
 customTypeHandlers: {
   author: node => {
     return `<div>${node.attributes.name}</div>`
@@ -76,7 +78,9 @@ customTypeHandlers: {
 
 The ``node`` in this example has the following structure:
 
-``{ type: 'author', attributes: { name: 'Test Person' } }``
+```js
+{ type: 'author', attributes: { name: 'Test Person' } }
+```
 
 
 #### ``blockTypeHandlers: Object``
@@ -96,7 +100,7 @@ where other default styles are mapped 1:1 (style ``h2`` produces ``<h2>``).
 The option works in a similar way as ``customTypeHandlers`` described above,
 with the distinction that is has a ``children`` property, and the key is the style name:
 
-```
+```js
 textBlock: {
   normal: node => {
     return `<p class="funky-paragraph">${node.children}</p>`
@@ -113,7 +117,7 @@ With this option you can tweak them into your own liking.
 
 The object takes the following keys:
 
-```
+```js
 listBlock: {
   number: node => {
     return `<ol class="article-list">${node.children}</ol>`
@@ -133,7 +137,7 @@ just text and marks. As spans may have attributes with data, you can
 make your own render which manipulates the output based on their attributes:
 
 
-```
+```js
 span: node => {
   let result = ''
   if (node.attributes.author) {
@@ -153,7 +157,7 @@ span: node => {
 Marks are by default mapped 1:1. If the mark is 'em' the output will be ``<em>``.
 With this option you can map marks to other tags, or just ignore them:
 
-```
+```js
 marks: {
   em: null // Just igonore 'em' tags.
   code: 'pre' // Render 'code' marks to 'pre' tags
