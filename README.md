@@ -92,7 +92,7 @@ which can contain a text block.
 
 The ``blockTypeHandlers`` object can contain the follow keys:
 
-#### ``textBlock: Object``
+##### ``textBlock: Object``
 Each text block has a ``style``. With this option you can manipulate how each style is rendered.
 By default the style ``normal`` is wrapped in a ``<p>``,
 where other default styles are mapped 1:1 (style ``h2`` produces ``<h2>``).
@@ -111,7 +111,7 @@ textBlock: {
 }
 ```
 
-#### ``listBlock: Object``
+##### ``listBlock: Object``
 By default lists are rendered with plain ``<ol>``, ``<ul>``and ``<li>`` tags.
 With this option you can tweak them into your own liking.
 
@@ -131,7 +131,7 @@ listBlock: {
 }
 ```
 
-#### ``span: Object``
+##### ``span: Object``
 Let you tweak how spans within blocks are rendered. By default the spans are
 just text and marks. As spans may have attributes with data, you can
 make your own render which manipulates the output based on their attributes:
@@ -153,7 +153,7 @@ span: node => {
 }
 ```
 
-#### ``marks: Object``
+##### ``marks: Object``
 Marks are by default mapped 1:1. If the mark is 'em' the output will be ``<em>``.
 With this option you can map marks to other tags, or just ignore them:
 
