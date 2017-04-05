@@ -109,8 +109,9 @@ textBlock: {
 
 #### ``listBlock: Object``
 By default lists are rendered with plain ``<ol>``, ``<ul>``and ``<li>`` tags.
-With this option you can tweak them into your own linking.
-It takes the following keys:
+With this option you can tweak them into your own liking.
+
+The object takes the following keys:
 
 ```
 listBlock: {
