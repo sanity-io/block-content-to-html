@@ -30,6 +30,13 @@ function getListItems(items, listHandlers, typeHandlers) {
   return output
 }
 
+function mapMark(mark, marksMapping) {
+  if (marksMapping && typeof marksMapping[mark] !== 'undefined') {
+    return marksMapping[mark]
+  }
+  return mark
+}
+
 export default function (blockTypeHandlers = {}) {
 
   const blockHandlers = {
@@ -74,8 +81,9 @@ export default function (blockTypeHandlers = {}) {
       let head = ''
       let tail = ''
       if (node.mark) {
-        head += `<${node.mark}>`
-        tail = `</${node.mark}>`
+        const markName = mapMark(node.mark, blockTypeHandlers.marks)
+        head += markName ? `<${markName}>` : ''
+        tail = markName ? `</${markName}>` : ''
       }
       node.children = getContent(node.content, typeHandlers)
       if (blockTypeHandlers.span) {
@@ -87,6 +95,7 @@ export default function (blockTypeHandlers = {}) {
       }
       return `${head}${getContent(node.content, typeHandlers)}${tail}`
     },
+
     unhandledBlock: node => {
       let result = ''
       Object.keys(node.attributes).forEach(aKey => {
