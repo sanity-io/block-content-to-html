@@ -43,7 +43,7 @@ const adapter = new Adapter()
 const html = adapter.parse(data)
 ```
 
-This will result in the variable ``html`` being:
+This will result in ``html`` being:
 
 ```
 <p>String with an <em>italicized</em> word.</p>
@@ -52,13 +52,13 @@ This will result in the variable ``html`` being:
 
 ## Interface
 
-The constructor will take an object as options:
+The constructor will take an object for options:
 
 ``new Adapter(options: Object)``
 
 ### Options
 
-The constructor parameter options is an object with the following keys:
+Options is an object with any of the following keys:
 
 #### ``customTypeHandlers: Object``
 
