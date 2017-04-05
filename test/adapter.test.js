@@ -12,6 +12,9 @@ const customAdapter = new Adapter(
       }
     },
     blockTypeHandlers: {
+      marks: {
+        em: null
+      },
       listBlock: {
         number: node => {
           return `<ol class="foo">${node.children}</ol>`
@@ -53,7 +56,7 @@ test('handles a plain string block', {todo: false}, t => {
   t.end()
 })
 
-test('handles a plain string block with custom contentHandler', {todo: false}, t => {
+test('handles a plain string block with custom adapter', {todo: false}, t => {
   const input = require('./fixtures/plain-text.json')
   const expected = '<p class="foo">Normal string of text.</p>'
   const got = customAdapter.parse(input)
@@ -68,6 +71,15 @@ test('handles italicized text', {todo: false}, t => {
   t.same(got, expected)
   t.end()
 })
+
+test('handles italicized text with custom adapter and removes the em mark if mapped to null', {todo: false}, t => {
+  const input = require('./fixtures/italicized-text.json')
+  const expected = '<p class="foo">String with an italicized word.</p>'
+  const got = customAdapter.parse(input)
+  t.same(got, expected)
+  t.end()
+})
+
 
 test('handles underline text', {todo: false}, t => {
   const input = require('./fixtures/underlined-text.json')
@@ -109,14 +121,14 @@ test('handles simple link text', {todo: false}, t => {
   t.end()
 })
 
-test('handles simple link text with custom content handler', {todo: false}, t => {
+test('handles simple link text with custom adapter', {todo: false}, t => {
   const input = require('./fixtures/link-simple-text.json')
   const expected = '<p class="foo">String before link <a class="foo" href="http://icanhas.cheezburger.com/">actual link text</a> the rest</p>'
   t.same(customAdapter.parse(input), expected)
   t.end()
 })
 
-test('handles simple link text with several attributes with custom content handler', {todo: false}, t => {
+test('handles simple link text with several attributes with custom adapter', {todo: false}, t => {
   const input = require('./fixtures/link-author-text.json')
   const expected = '<p class="foo">String before link <div>Test Testesen</div>'
     + '<a class="foo" href="http://icanhas.cheezburger.com/">actual link text</a> the rest</p>'
@@ -141,7 +153,7 @@ test('handles a numbered list', {todo: false}, t => {
   t.end()
 })
 
-test('handles a numbered list with custom content handler', {todo: false}, t => {
+test('handles a numbered list with custom content adapter', {todo: false}, t => {
   const input = require('./fixtures/list-numbered-blocks.json')
   const expected = '<ol class="foo"><li class="foo"><p class="foo">One</p></li>'
     + '<li class="foo"><p class="foo">Two has <strong>bold</strong> word</p></li>'
@@ -176,7 +188,7 @@ test('handles a plain h2 block', {todo: false}, t => {
 })
 
 
-test('handles a plain h2 block with custom handler', {todo: false}, t => {
+test('handles a plain h2 block with custom adapter', {todo: false}, t => {
   const input = require('./fixtures/h2-text.json')
   const expected = '<div class="big-heading">Such h2 header, much amaze</div>'
   t.same(customAdapter.parse(input), expected)
