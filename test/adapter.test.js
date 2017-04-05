@@ -33,11 +33,11 @@ const customAdapter = new Adapter(
       },
       span: node => {
         let result = ''
+        if (node.attributes.author) {
+          result = `<div>${node.attributes.author.name}</div>`
+        }
         if (node.attributes.link) {
           result += `<a class="foo" href="${node.attributes.link.href}">${node.children}</a>`
-        }
-        if (node.attributes.author) {
-          result = `<div>${node.attributes.author.name}</div>${result}`
         }
         if (Object.keys(node.attributes).length === 0) {
           result = node.children
