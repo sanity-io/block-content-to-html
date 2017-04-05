@@ -1,4 +1,4 @@
-import BaseAdapter from '@sanity/block-content-adapter'
+import BaseAdapter from '@sanity/block-content-to-tree'
 import builtInHandlers from './type-handlers'
 
 const baseAdapter = new BaseAdapter()
