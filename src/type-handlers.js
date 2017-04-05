@@ -22,80 +22,50 @@ function getListItems(items, listHandlers, typeHandlers) {
     if (typeof item === 'string') {
       output += item
     } else {
-      const contentHandler = typeHandlers[item.type] || typeHandlers.text
-      output += listHandlers.listItem(item).replace('{content}', contentHandler(item))
+      const contentHandler = typeHandlers[item.type] || typeHandlers.textBlock
+      item.children = contentHandler(item)
+      output += listHandlers.listItem(item)
     }
   })
   return output
 }
 
-function attributesToHeadAndTail(attributes, spanHandlers) {
-  let head = ''
-  let tail = ''
-  Object.keys(attributes).forEach(aKey => {
-    // If there is a registered handler for this attribute
-    if (spanHandlers[aKey]) {
-      const wrappedContent = spanHandlers[aKey](attributes[aKey]).split('{content}')
-      head += wrappedContent[0] || ''
-      tail = (wrappedContent[1] || '') + tail
-    } else {
-    // Output a comment with metainfo
-      const primitive = isPrimitive(attributes[aKey])
-      const metaValue = primitive
-        ? attributes[aKey]
-        : JSON.stringify(attributes[aKey]).replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0')
-      head += `<span data-unhandled-attribute-name="${aKey}" data-unhandled-attribute-value="${metaValue}" />`
-      tail = ''
-    }
-  })
-  return {
-    head: head,
-    tail: tail
-  }
-}
-
-export default function (contentHandlers = {}) {
+export default function (blockTypeHandlers = {}) {
 
   const blockHandlers = {
     normal: node => {
-      return '<p>{content}</p>'
+      return `<p>${node.children}</p>`
     },
-    ...contentHandlers.block || {}
-  }
-
-  const spanHandlers = {
-    link: attributes => {
-      return `<a href="${attributes.href}">{content}</a>`
-    },
-    ...contentHandlers.span || {}
+    ...blockTypeHandlers.textBlock || {}
   }
 
   const listHandlers = {
     number: node => {
-      return '<ol>{content}</ol>'
+      return `<ol>${node.children}</ol>`
     },
     bullet: node => {
-      return '<ul>{content}</ul>'
+      return `<ul>${node.children}</ul>`
     },
     listItem: node => {
-      return '<li>{content}</li>'
+      return `<li>${node.children}</li>`
     },
-    ...contentHandlers.list || {}
+    ...blockTypeHandlers.listBlock || {}
   }
 
   const typeHandlers = {
 
     block: node => {
       if (blockHandlers[node.style]) {
-        return blockHandlers[node.style](node).replace('{content}', getContent(node.content, typeHandlers))
+        node.children = getContent(node.content, typeHandlers)
+        return blockHandlers[node.style](node)
       }
       return `<${node.style}>${getContent(node.content, typeHandlers)}</${node.style}>`
     },
 
     list: node => {
       if (listHandlers[node.itemStyle]) {
+        node.children = getListItems(node.items, listHandlers, typeHandlers)
         return listHandlers[node.itemStyle](node)
-          .replace('{content}', getListItems(node.items, listHandlers, typeHandlers))
       }
       return `<ul>${getListItems(node.items, listHandlers, typeHandlers)}</ul>`
     },
@@ -107,16 +77,27 @@ export default function (contentHandlers = {}) {
         head += `<${node.mark}>`
         tail = `</${node.mark}>`
       }
-      if (node.attributes) {
-        const attrHeadAndTail = attributesToHeadAndTail(node.attributes, spanHandlers)
-        head += attrHeadAndTail.head
-        tail = attrHeadAndTail.tail + tail
+      node.children = getContent(node.content, typeHandlers)
+      if (blockTypeHandlers.span) {
+        return `${head}${blockTypeHandlers.span(node)}${tail}`
+      } else if (node.attributes && node.attributes.link) {
+        // Deal with the default block editor setup 'link' attribute
+        head += `<a href="${node.attributes.link.href}">`
+        tail = `</a>${tail}`
       }
       return `${head}${getContent(node.content, typeHandlers)}${tail}`
     },
-    object: node => {
-      const {head, tail} = attributesToHeadAndTail(node.attributes, spanHandlers)
-      return `${head}${tail}`
+    unhandledBlock: node => {
+      let result = ''
+      Object.keys(node.attributes).forEach(aKey => {
+        // Output a comment with metainfo
+        const primitive = isPrimitive(node.attributes[aKey])
+        const metaValue = primitive
+          ? node.attributes[aKey]
+          : JSON.stringify(node.attributes[aKey]).replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0')
+        result += `<div data-unhandled-attribute-name="${aKey}" data-unhandled-attribute-value="${metaValue}" />`
+      })
+      return result
     }
   }
 

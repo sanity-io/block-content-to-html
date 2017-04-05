@@ -7,12 +7,11 @@ const baseAdapter = new BaseAdapter()
 class Adapter {
 
   constructor(options = {}) {
-    const optionalTypeHandlers = options.typeHandlers || {}
-    this.typeHandlers = Object.assign(
-      {},
-      builtInHandlers(options.contentHandlers),
-      optionalTypeHandlers
-    )
+    const customTypeHandlers = options.customTypeHandlers || {}
+    this.typeHandlers = {
+      ...builtInHandlers(options.blockTypeHandlers || {}),
+      ...customTypeHandlers
+    }
   }
 
   parse(data) {
@@ -30,7 +29,7 @@ class Adapter {
       return this.typeHandlers[data.type](data)
     }
     // Fallback
-    return this.typeHandlers.object(data)
+    return this.typeHandlers.unhandledBlock(data)
   }
 
 }

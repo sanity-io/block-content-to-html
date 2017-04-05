@@ -6,29 +6,40 @@ import Adapter from '../src/Adapter.js'
 const adapter = new Adapter()
 const customAdapter = new Adapter(
   {
-    typeHandlers: {
+    customTypeHandlers: {
       author: node => {
         return `<div>${node.attributes.name}</div>`
       }
     },
-    contentHandlers: {
-      list: {
+    blockTypeHandlers: {
+      listBlock: {
         number: node => {
-          return '<ol class="foo">{content}</ol>'
+          return `<ol class="foo">${node.children}</ol>`
         },
         listItem: node => {
-          return '<li class="foo">{content}</li>'
+          return `<li class="foo">${node.children}</li>`
         }
       },
-      block: {
+      textBlock: {
         normal: node => {
-          return '<p class="foo">{content}</p>'
+          return `<p class="foo">${node.children}</p>`
+        },
+        h2: node => {
+          return `<div class="big-heading">${node.children}</div>`
         }
       },
-      span: {
-        link: attributes => {
-          return `<div data-foo="${attributes.href}">Lalala</div>{content}`
+      span: node => {
+        let result = ''
+        if (node.attributes.link) {
+          result += `<a class="foo" href="${node.attributes.link.href}">${node.children}</a>`
         }
+        if (node.attributes.author) {
+          result = `<div>${node.attributes.author.name}</div>${result}`
+        }
+        if (Object.keys(node.attributes).length === 0) {
+          result = node.children
+        }
+        return result
       }
     }
   }
@@ -100,10 +111,19 @@ test('handles simple link text', {todo: false}, t => {
 
 test('handles simple link text with custom content handler', {todo: false}, t => {
   const input = require('./fixtures/link-simple-text.json')
-  const expected = '<p class="foo">String before link <div data-foo="http://icanhas.cheezburger.com/">Lalala</div>actual link text the rest</p>'
+  const expected = '<p class="foo">String before link <a class="foo" href="http://icanhas.cheezburger.com/">actual link text</a> the rest</p>'
   t.same(customAdapter.parse(input), expected)
   t.end()
 })
+
+test('handles simple link text with several attributes with custom content handler', {todo: false}, t => {
+  const input = require('./fixtures/link-author-text.json')
+  const expected = '<p class="foo">String before link <div>Test Testesen</div>'
+    + '<a class="foo" href="http://icanhas.cheezburger.com/">actual link text</a> the rest</p>'
+  t.same(customAdapter.parse(input), expected)
+  t.end()
+})
+
 
 test('handles messy link text', {todo: false}, t => {
   const input = require('./fixtures/link-messy-text.json')
@@ -156,9 +176,17 @@ test('handles a plain h2 block', {todo: false}, t => {
 })
 
 
+test('handles a plain h2 block with custom handler', {todo: false}, t => {
+  const input = require('./fixtures/h2-text.json')
+  const expected = '<div class="big-heading">Such h2 header, much amaze</div>'
+  t.same(customAdapter.parse(input), expected)
+  t.end()
+})
+
+
 test('handles a custom block type without a registered handler', {todo: false}, t => {
   const input = require('./fixtures/custom-block.json')
-  const expected = '<span data-unhandled-attribute-name="name" data-unhandled-attribute-value="Test Person" />'
+  const expected = '<div data-unhandled-attribute-name="name" data-unhandled-attribute-value="Test Person" />'
   const got = adapter.parse(input)
   t.same(got, expected)
   t.end()
