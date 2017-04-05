@@ -1,4 +1,4 @@
-# block-content-to-html
+# block-content-to-html-js
 
 
 ## License

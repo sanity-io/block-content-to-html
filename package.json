@@ -22,7 +22,7 @@
   "author": "Sanity <hello@sanity.io>",
   "license": "MIT",
   "dependencies": {
-    "@sanity/block-content-to-tree": "^0.0.1",
+    "@sanity/block-content-to-tree": "0.0.2",
     "in-publish": "^2.0.0"
   },
   "devDependencies": {
@@ -49,10 +49,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sanity-io/block-content-adapter-html.git"
+    "url": "git+https://github.com/sanity-io/block-content-to-html-js.git"
   },
   "bugs": {
-    "url": "https://github.com/sanity-io/block-content-adapter-html/issues"
+    "url": "https://github.com/sanity-io/block-content-to-html-js/issues"
   },
-  "homepage": "https://github.com/sanity-io/block-content-adapter-html#readme"
+  "homepage": "https://github.com/sanity-io/block-content-to-html-js#readme"
 }
