@@ -79,7 +79,7 @@ The ``node`` in this example has the following structure:
 ``{ type: 'author', attributes: { name: 'Test Person' } }``
 
 
-### ``blockTypeHandlers: Object``
+#### ``blockTypeHandlers: Object``
 
 Handlers for manipulating the output of the default, built in, block types.
 The default block type holds either a block of text or a list.
