@@ -136,15 +136,18 @@ Let you tweak how spans within blocks are rendered. By default the spans are
 just text and marks. As spans may have attributes with data, you can
 make your own render which manipulates the output based on their attributes:
 
-
 ```js
 span: node => {
   let result = ''
   if (node.attributes.author) {
-    result = `<div>${node.attributes.author.name}</div>`
+    result = `
+      <div class="author-bio">
+        <img src="${node.attributes.author.image.url}" />
+        ${node.attributes.author.name}
+      </div>`
   }
   if (node.attributes.link) {
-    result += `<a class="foo" href="${node.attributes.link.href}">${node.children}</a>`
+    result += `<a href="${node.attributes.link.href}">${node.children}</a>`
   }
   if (Object.keys(node.attributes).length === 0) {
     result = node.children
