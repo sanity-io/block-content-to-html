@@ -89,9 +89,10 @@ Options is an object with any of the following keys:
   }
 }
 
-Below is a closer desciption for each option.
-
 ```
+
+Read below for a closer description of each option.
+
 
 #### ``customTypeHandlers: Object``
 
