@@ -58,7 +58,7 @@ The constructor will take an object for options:
 const adapter = new Adapter(options: Object)
 ```
 
-Converting bloc content to array, is simply calling ``.parse``:
+Converting block content, is done by calling ``.parse``:
 
 ```js
 adapter.parse(data: Array|Object)
