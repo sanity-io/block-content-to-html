@@ -1,7 +1,7 @@
 {
   "name": "@sanity/block-content-to-html",
   "description": "Customizable HTML parser for block editor output",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "lib/index.js",
   "umd": "umd/index.min.js",
   "scripts": {
