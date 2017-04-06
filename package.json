@@ -22,7 +22,7 @@
   "author": "Sanity <hello@sanity.io>",
   "license": "MIT",
   "dependencies": {
-    "@sanity/block-content-to-tree": "0.0.4",
+    "@sanity/block-content-to-tree": "0.0.5",
     "in-publish": "^2.0.0"
   },
   "devDependencies": {

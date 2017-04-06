@@ -196,11 +196,11 @@ test('handles a plain h2 block with custom adapter', {todo: false}, t => {
 })
 
 
-test('handles a custom block type without a registered handler', {todo: false}, t => {
+test('throws an error on custom block type without a registered handler', {todo: false}, t => {
   const input = require('./fixtures/custom-block.json')
-  const expected = '<div data-unhandled-attribute-name="name" data-unhandled-attribute-value="Test Person" />'
-  const got = adapter.parse(input)
-  t.same(got, expected)
+  t.throws(() => {
+    adapter.parse(input)
+  }, {message: "Don't know how to handle type 'author'"}, {})
   t.end()
 })
 
@@ -208,6 +208,15 @@ test('handles a custom block type with a custom registered handler', {todo: fals
   const input = require('./fixtures/custom-block.json')
   const expected = '<div>Test Person</div>'
   const got = customAdapter.parse(input)
+  t.same(got, expected)
+  t.end()
+})
+
+
+test('handles dangerous text', {todo: false}, t => {
+  const input = require('./fixtures/dangerous-text.json')
+  const expected = '<p>I am 1337 &lt;script&gt;alert(&#039;&#x2F;&#x2F;haxxor&#039;);&lt;&#x2F;script&gt;</p>'
+  const got = adapter.parse(input)
   t.same(got, expected)
   t.end()
 })

@@ -28,8 +28,7 @@ class Adapter {
     if (this.typeHandlers[data.type]) {
       return this.typeHandlers[data.type](data)
     }
-    // Fallback
-    return this.typeHandlers.unhandledBlock(data)
+    throw new Error(`Don't know how to handle type '${data.type}'`)
   }
 
 }

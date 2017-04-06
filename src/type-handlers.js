@@ -1,13 +1,18 @@
-function isPrimitive(val) {
-  const type = typeof val
-  return val === null || (type !== 'object' && type !== 'function')
+function escapeHtml(unsafe) {
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+    .replace(/\//g, '&#x2F;')
 }
 
 function getContent(content, typeHandlers) {
   let output = ''
   content.forEach(item => {
     if (typeof item === 'string') {
-      output += item
+      output += escapeHtml(item)
     } else {
       const handler = typeHandlers[item.type] || typeHandlers.text
       output += handler(item)
@@ -20,7 +25,7 @@ function getListItems(items, listHandlers, typeHandlers) {
   let output = ''
   items.forEach(item => {
     if (typeof item === 'string') {
-      output += item
+      output += escapeHtml(item)
     } else {
       const contentHandler = typeHandlers[item.type] || typeHandlers.textBlock
       item.children = contentHandler(item)
@@ -94,19 +99,6 @@ export default function (blockTypeHandlers = {}) {
         tail = `</a>${tail}`
       }
       return `${head}${getContent(node.content, typeHandlers)}${tail}`
-    },
-
-    unhandledBlock: node => {
-      let result = ''
-      Object.keys(node.attributes).forEach(aKey => {
-        // Output a comment with metainfo
-        const primitive = isPrimitive(node.attributes[aKey])
-        const metaValue = primitive
-          ? node.attributes[aKey]
-          : JSON.stringify(node.attributes[aKey]).replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0')
-        result += `<div data-unhandled-attribute-name="${aKey}" data-unhandled-attribute-value="${metaValue}" />`
-      })
-      return result
     }
   }
 
