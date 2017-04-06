@@ -55,7 +55,9 @@ This will result in ``html`` being:
 The constructor will take an object for options:
 
 ```js
-new Adapter(options: Object)
+const adapter = new Adapter(options: Object)
+
+adapter.parse(data: Array|Object)
 ```
 
 ### Options
