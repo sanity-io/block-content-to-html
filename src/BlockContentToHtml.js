@@ -1,10 +1,21 @@
 import BaseAdapter from '@sanity/block-content-to-tree'
 import builtInHandlers from './type-handlers'
+import {escapeHtml} from './type-handlers'
 
 const baseAdapter = new BaseAdapter()
 
+function parseSingle(data, typeHandlers) {
+  if (typeHandlers[data.type]) {
+    return typeHandlers[data.type](data)
+  }
+  throw new Error(`Don't know how to handle type '${data.type}'`)
+}
 
-class Adapter {
+class BlockContentToHtml {
+
+  static escapeHtml(unsafe) {
+    return escapeHtml(unsafe)
+  }
 
   constructor(options = {}) {
     const customTypeHandlers = options.customTypeHandlers || {}
@@ -14,23 +25,16 @@ class Adapter {
     }
   }
 
-  parse(data) {
+  convert(data) {
     const base = baseAdapter.parse(data)
     if (Array.isArray(base)) {
       return base.map(single => {
-        return this.parseSingle(single)
+        return parseSingle(single, this.typeHandlers)
       }).join('\n')
     }
-    return this.parseSingle(base)
-  }
-
-  parseSingle(data) {
-    if (this.typeHandlers[data.type]) {
-      return this.typeHandlers[data.type](data)
-    }
-    throw new Error(`Don't know how to handle type '${data.type}'`)
+    return parseSingle(base, this.typeHandlers)
   }
 
 }
 
-export default Adapter
+export default BlockContentToHtml

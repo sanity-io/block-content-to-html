@@ -1,1 +1,1 @@
-module.exports = require('./Adapter.js')
+module.exports = require('./BlockContentToHtml.js')

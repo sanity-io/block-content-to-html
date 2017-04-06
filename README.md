@@ -37,10 +37,10 @@ const data = {
 
 
 // Now convert it with block-content-to-html
-const Adapter = require('@sanity/block-content-to-html')
-const adapter = new Adapter()
+const BlockContentToHtml = require('@sanity/block-content-to-html')
+const toHtml = new BlockContentToHtml()
 
-const html = adapter.parse(data)
+const html = toHtml.convert(data)
 ```
 
 This will result in ``html`` being:
@@ -55,13 +55,13 @@ This will result in ``html`` being:
 The constructor will take an object for options:
 
 ```js
-const adapter = new Adapter(options: Object)
+const toHtml = new BlockContentToHtml(options: Object)
 ```
 
 Converting the block content is done by calling ``.parse``:
 
 ```js
-adapter.parse(data: Array|Object)
+toHtml.convert(data: Array|Object)
 ```
 
 ### Constructor options
@@ -173,6 +173,11 @@ The ``blockTypeHandlers`` object can contain the follow keys:
   }
   ```
 
+### Utility function
+```
+BlockContentToHtml.escapeHtml(unsafe: string)
+```
+Escape unsafe text to HTML safe text. To be used with your own handler functions.
 
 ## More information / examples
 
