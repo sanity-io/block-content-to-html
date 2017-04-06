@@ -68,6 +68,31 @@ toHtml.convert(data: Array|Object)
 
 Options is an object with any of the following keys:
 
+```js
+{
+  customTypeHandlers: {
+    ...
+  },
+  blockTypeHandlers: {
+    textBlock: {
+      ...
+    },
+    listBlock: {
+      ...
+    },
+    span: {
+      ...
+    }
+    marks: {
+      ...
+    }
+  }
+}
+
+Below is a closer desciption for each option.
+
+```
+
 #### ``customTypeHandlers: Object``
 
 An object with keys for your custom block types (which is not of type ``block``).
@@ -174,7 +199,7 @@ The ``blockTypeHandlers`` object can contain the follow keys:
   ```
 
 ### Utility function
-```
+```js
 BlockContentToHtml.escapeHtml(unsafe: string)
 ```
 Escape unsafe text to HTML safe text. To be used with your own handler functions.
