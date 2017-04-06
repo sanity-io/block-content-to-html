@@ -221,4 +221,13 @@ test('handles dangerous text', {todo: false}, t => {
   t.end()
 })
 
+test('exposes the escapeHtml utility function', {todo: false}, t => {
+  const input = '<foo>'
+  const expected = '&lt;foo&gt;'
+  const got = BlockContentToHtml.escapeHtml(input)
+  t.same(got, expected)
+  t.end()
+})
+
+
 /* eslint-enable id-length */

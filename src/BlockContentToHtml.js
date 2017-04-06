@@ -1,6 +1,6 @@
 import BaseAdapter from '@sanity/block-content-to-tree'
 import builtInHandlers from './type-handlers'
-import {escapeHtml} from './type-handlers'
+import escapeHtml from './escapeHtml'
 
 const baseAdapter = new BaseAdapter()
 

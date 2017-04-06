@@ -1,18 +1,10 @@
-export function escapeHTML(unsafe) {
-  return unsafe
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;')
-    .replace(/\//g, '&#x2F;')
-}
+import escapeHtml from './escapeHtml'
 
 function getContent(content, typeHandlers) {
   let output = ''
   content.forEach(item => {
     if (typeof item === 'string') {
-      output += escapeHTML(item)
+      output += escapeHtml(item)
     } else {
       const handler = typeHandlers[item.type] || typeHandlers.text
       output += handler(item)
@@ -25,7 +17,7 @@ function getListItems(items, listHandlers, typeHandlers) {
   let output = ''
   items.forEach(item => {
     if (typeof item === 'string') {
-      output += escapeHTML(item)
+      output += escapeHtml(item)
     } else {
       const contentHandler = typeHandlers[item.type] || typeHandlers.textBlock
       item.children = contentHandler(item)
