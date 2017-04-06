@@ -56,11 +56,15 @@ The constructor will take an object for options:
 
 ```js
 const adapter = new Adapter(options: Object)
+```
 
+Converting bloc content to array, is simply calling ``.parse``:
+
+```js
 adapter.parse(data: Array|Object)
 ```
 
-### Options
+### Constructor options
 
 Options is an object with any of the following keys:
 
