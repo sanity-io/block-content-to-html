@@ -58,7 +58,7 @@ The constructor will take an object for options:
 const toHtml = new BlockContentToHtml(options: Object)
 ```
 
-Converting the block content is done by calling ``.parse``:
+Converting the block content is done by calling ``.convert``:
 
 ```js
 toHtml.convert(data: Array|Object)
