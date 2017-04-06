@@ -92,80 +92,80 @@ which can contain a text block.
 
 The ``blockTypeHandlers`` object can contain the follow keys:
 
-##### ``textBlock: Object``
-Each text block has a ``style``. With this option you can manipulate how each style is rendered.
-By default the style ``normal`` is wrapped in a ``<p>``,
-where other default styles are mapped 1:1 (style ``h2`` produces ``<h2>``).
+* ##### ``textBlock: Object``
+  Each text block has a ``style``. With this option you can manipulate how each style is rendered.
+  By default the style ``normal`` is wrapped in a ``<p>``,
+  where other default styles are mapped 1:1 (style ``h2`` produces ``<h2>``).
 
-The option works in a similar way as ``customTypeHandlers`` described above,
-with the distinction that is has a ``children`` property, and the key is the style name:
+  The option works in a similar way as ``customTypeHandlers`` described above,
+  with the distinction that is has a ``children`` property, and the key is the style name:
 
-```js
-textBlock: {
-  normal: node => {
-    return `<p class="funky-paragraph">${node.children}</p>`
-  },
-  h2: node => {
-    return `<div class="big-heading">${node.children}</div>`
+  ```js
+  textBlock: {
+    normal: node => {
+      return `<p class="funky-paragraph">${node.children}</p>`
+    },
+    h2: node => {
+      return `<div class="big-heading">${node.children}</div>`
+    }
   }
-}
-```
+  ```
 
-##### ``listBlock: Object``
-By default lists are rendered with plain ``<ol>``, ``<ul>``and ``<li>`` tags.
-With this option you can tweak them into your own liking.
+* ##### ``listBlock: Object``
+  By default lists are rendered with plain ``<ol>``, ``<ul>``and ``<li>`` tags.
+  With this option you can tweak them into your own liking.
 
-The object takes the following keys:
+  The object takes the following keys:
 
-```js
-listBlock: {
-  number: node => {
-    return `<ol class="article-list">${node.children}</ol>`
-  },
-  bullet: node => {
-    return `<ul class="article-list">${node.children}</ul>`
-  },
-  listItem: node => {
-    return `<li class="article-list-item">${node.children}</li>`
+  ```js
+  listBlock: {
+    number: node => {
+      return `<ol class="article-list">${node.children}</ol>`
+    },
+    bullet: node => {
+      return `<ul class="article-list">${node.children}</ul>`
+    },
+    listItem: node => {
+      return `<li class="article-list-item">${node.children}</li>`
+    }
   }
-}
-```
+  ```
 
-##### ``span: Object``
-Let you tweak how spans within blocks are rendered. By default the spans are
-just text and marks. As spans may have attributes with data, you can
-make your own render which manipulates the output based on their attributes:
+* ##### ``span: Object``
+  Let you tweak how spans within blocks are rendered. By default the spans are
+  just text and marks. As spans may have attributes with data, you can
+  make your own render which manipulates the output based on their attributes:
 
-```js
-span: node => {
-  let result = ''
-  if (node.attributes.author) {
-    result = `
-      <div class="author-bio">
-        <img src="${node.attributes.author.image.url}" />
-        ${node.attributes.author.name}
-      </div>`
+  ```js
+  span: node => {
+    let result = ''
+    if (node.attributes.author) {
+      result = `
+        <div class="author-bio">
+          <img src="${node.attributes.author.image.url}" />
+          ${node.attributes.author.name}
+        </div>`
+    }
+    if (node.attributes.link) {
+      result += `<a href="${node.attributes.link.href}">${node.children}</a>`
+    }
+    if (Object.keys(node.attributes).length === 0) {
+      result = node.children
+    }
+    return result
   }
-  if (node.attributes.link) {
-    result += `<a href="${node.attributes.link.href}">${node.children}</a>`
-  }
-  if (Object.keys(node.attributes).length === 0) {
-    result = node.children
-  }
-  return result
-}
-```
+  ```
 
-##### ``marks: Object``
-Marks are by default mapped 1:1. If the mark is 'em' the output will be ``<em>``.
-With this option you can map marks to other tags, or just ignore them:
+* ##### ``marks: Object``
+  Marks are by default mapped 1:1. If the mark is 'em' the output will be ``<em>``.
+  With this option you can map marks to other tags, or just ignore them:
 
-```js
-marks: {
-  em: null // Just igonore 'em' tags.
-  code: 'pre' // Render 'code' marks to 'pre' tags
-}
-```
+  ```js
+  marks: {
+    em: null // Just igonore 'em' tags.
+    code: 'pre' // Render 'code' marks to 'pre' tags
+  }
+  ```
 
 
 ## More information / examples
