@@ -227,7 +227,7 @@ const toHtml = new BlockContentToHtml({
     textBlock: {
       h2: node => {
         const htmlId = node.extra // Here it is available for us
-        return `<div class="big-heading" id="${htmlId}">${node.children}</div>`
+        return `<h2 id="${htmlId}">${node.children}</h2>`
       }
     }
   }
