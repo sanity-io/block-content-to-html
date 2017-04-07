@@ -204,6 +204,7 @@ The ``blockTypeHandlers`` object can contain the follow keys:
 ``block-content-to-html`` supports setting custom data on the original block content
 through the ``.extra`` property on a block. This is handy if you for example want
 to generate and keep track of a HTML id attribute or other arbitrary data related to rendering.
+The value can be anything you like.
 
 Example:
 
