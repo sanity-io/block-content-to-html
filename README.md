@@ -240,7 +240,7 @@ const html = toHtml.convert(blockContentdata)
 Resulting in ``html`` being:
 
 ```html
-<div class="big-heading" id="header_1234">Such h2 header, much amaze</div>
+<h2 id="header_1234">Such h2 header, much amaze</h2>
 ```
 
 ## Utility function
