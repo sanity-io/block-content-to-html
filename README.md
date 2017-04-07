@@ -199,7 +199,49 @@ The ``blockTypeHandlers`` object can contain the follow keys:
   }
   ```
 
-### Utility function
+## Custom data on the block content
+
+``block-content-to-html`` supports setting custom data on the original block content
+through the ``.extra`` property on a block. This is handy if you for example want
+to generate and keep track of a HTML id attribute.
+
+Example:
+
+```js
+const blockContent = {
+  "_type": "block",
+  "style": "h2",
+  "extra": "header_1234",
+  "spans": [
+    {
+      "_type": "span",
+      "text": "Such h2 header, much amaze",
+      "marks": []
+    }
+  ]
+}
+
+const toHtml = new BlockContentToHtml({
+  blockTypeHandlers: {
+    textBlock: {
+      h2: node => {
+        return `<div class="big-heading" id="${node.extra}">${node.children}</div>`
+      }
+    }
+  }
+})
+
+const html = toHtml.convert(blockContentdata)
+
+```
+
+Resulting in ``html`` being:
+
+```html
+<div class="big-heading" id="header_1234">Such h2 header, much amaze</div>
+```
+
+## Utility function
 ```js
 BlockContentToHtml.escapeHtml(unsafe: string)
 ```

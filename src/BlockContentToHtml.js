@@ -1,8 +1,8 @@
-import BaseAdapter from '@sanity/block-content-to-tree'
+import BlockContentToTree from '@sanity/block-content-to-tree'
 import builtInHandlers from './type-handlers'
 import escapeHtml from './escapeHtml'
 
-const baseAdapter = new BaseAdapter()
+const blockContentToTree = new BlockContentToTree()
 
 function parseSingle(data, typeHandlers) {
   if (typeHandlers[data.type]) {
@@ -26,7 +26,7 @@ class BlockContentToHtml {
   }
 
   convert(data) {
-    const base = baseAdapter.parse(data)
+    const base = blockContentToTree.convert(data)
     if (Array.isArray(base)) {
       return base.map(single => {
         return parseSingle(single, this.typeHandlers)

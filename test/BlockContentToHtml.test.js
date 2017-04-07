@@ -28,7 +28,7 @@ const myBlockContentToHtml = new BlockContentToHtml(
           return `<p class="foo">${node.children}</p>`
         },
         h2: node => {
-          return `<div class="big-heading">${node.children}</div>`
+          return `<div class="big-heading" id="${node.extra}">${node.children}</div>`
         }
       },
       span: node => {
@@ -190,7 +190,7 @@ test('handles a plain h2 block', {todo: false}, t => {
 
 test('handles a plain h2 block with custom adapter', {todo: false}, t => {
   const input = require('./fixtures/h2-text.json')
-  const expected = '<div class="big-heading">Such h2 header, much amaze</div>'
+  const expected = '<div class="big-heading" id="header_1234">Such h2 header, much amaze</div>'
   t.same(myBlockContentToHtml.convert(input), expected)
   t.end()
 })
