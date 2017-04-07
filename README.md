@@ -194,8 +194,8 @@ The ``blockTypeHandlers`` object can contain the follow keys:
 
   ```js
   marks: {
-    em: null // Just igonore 'em' tags.
-    code: 'pre' // Render 'code' marks to 'pre' tags
+    em: null // Just igonore 'em' marks.
+    code: 'pre' // Render 'code' marks as 'pre' tags
   }
   ```
 
