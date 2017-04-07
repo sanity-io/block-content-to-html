@@ -203,7 +203,7 @@ The ``blockTypeHandlers`` object can contain the follow keys:
 
 ``block-content-to-html`` supports setting custom data on the original block content
 through the ``.extra`` property on a block. This is handy if you for example want
-to generate and keep track of a HTML id attribute.
+to generate and keep track of a HTML id attribute or other arbitrary data related to rendering.
 
 Example:
 
@@ -211,7 +211,7 @@ Example:
 const blockContent = {
   "_type": "block",
   "style": "h2",
-  "extra": "header_1234",
+  "extra": "header_1234", // Our extra attribute added to the original content.
   "spans": [
     {
       "_type": "span",
@@ -225,7 +225,8 @@ const toHtml = new BlockContentToHtml({
   blockTypeHandlers: {
     textBlock: {
       h2: node => {
-        return `<div class="big-heading" id="${node.extra}">${node.children}</div>`
+        const htmlId = node.extra // Here it is available for us
+        return `<div class="big-heading" id="${htmlId}">${node.children}</div>`
       }
     }
   }
