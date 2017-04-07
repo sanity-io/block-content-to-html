@@ -212,7 +212,7 @@ Example:
 const blockContent = {
   "_type": "block",
   "style": "h2",
-  "extra": "header_1234", // Our extra attribute added to the original content.
+  "extra": "header_1234", // Our extra property added to the original content.
   "spans": [
     {
       "_type": "span",
