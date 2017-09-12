@@ -1,2 +1,1 @@
-import BlockContentToHtml from './BlockContentToHtml.js'
-module.exports = BlockContentToHtml
+module.exports = require('./BlockContentToHtml')

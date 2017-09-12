@@ -1,4 +1,4 @@
-import escapeHtml from './escapeHtml'
+const escapeHtml = require('./escapeHtml')
 
 function getContent(content, typeHandlers) {
   let output = ''
@@ -34,7 +34,7 @@ function mapMark(mark, marksMapping) {
   return mark
 }
 
-export default function (blockTypeHandlers = {}) {
+module.exports = function (blockTypeHandlers = {}) {
 
   const blockHandlers = {
     normal: node => {

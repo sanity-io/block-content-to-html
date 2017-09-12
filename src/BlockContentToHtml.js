@@ -1,6 +1,6 @@
-import BlockContentToTree from '@sanity/block-content-to-tree'
-import builtInHandlers from './type-handlers'
-import escapeHtml from './escapeHtml'
+const BlockContentToTree = require('@sanity/block-content-to-tree')
+const builtInHandlers = require('./type-handlers')
+const escapeHtml = require('./escapeHtml')
 
 const blockContentToTree = new BlockContentToTree()
 
@@ -37,4 +37,4 @@ class BlockContentToHtml {
 
 }
 
-export default BlockContentToHtml
+module.exports = BlockContentToHtml

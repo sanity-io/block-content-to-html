@@ -1,4 +1,4 @@
-export default function escapeHTML(unsafe) {
+module.exports = function escapeHTML(unsafe) {
   return unsafe
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
