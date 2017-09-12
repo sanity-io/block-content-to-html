@@ -1,6 +1,10 @@
 const escapeHtml = require('./escapeHtml')
 
 function getContent(content, typeHandlers) {
+  if (typeof content === 'string') {
+    return content
+  }
+
   let output = ''
   content.forEach(item => {
     if (typeof item === 'string') {
@@ -60,10 +64,10 @@ module.exports = function (blockTypeHandlers = {}) {
 
     block: node => {
       if (blockHandlers[node.style]) {
-        node.children = getContent(node.content, typeHandlers)
+        node.children = getContent(node.children, typeHandlers)
         return blockHandlers[node.style](node)
       }
-      return `<${node.style}>${getContent(node.content, typeHandlers)}</${node.style}>`
+      return `<${node.style}>${getContent(node.children, typeHandlers)}</${node.style}>`
     },
 
     list: node => {
@@ -77,20 +81,23 @@ module.exports = function (blockTypeHandlers = {}) {
     span: node => {
       let head = ''
       let tail = ''
-      if (node.mark) {
-        const markName = mapMark(node.mark, blockTypeHandlers.marks)
-        head += markName ? `<${markName}>` : ''
-        tail = markName ? `</${markName}>` : ''
+
+      const mark = node.mark && mapMark(node.mark, blockTypeHandlers.marks)
+      if (typeof mark === 'string') {
+        head += mark ? `<${mark}>` : ''
+        tail = mark ? `</${mark}>` : ''
       }
-      node.children = getContent(node.content, typeHandlers)
+
+      node.children = getContent(node.children, typeHandlers)
       if (blockTypeHandlers.span) {
         return `${head}${blockTypeHandlers.span(node)}${tail}`
-      } else if (node.attributes && node.attributes.link) {
+      } else if (mark && mark._type === 'link') {
         // Deal with the default block editor setup 'link' attribute
-        head += `<a href="${node.attributes.link.href}">`
+        head += `<a href="${mark.href}">`
         tail = `</a>${tail}`
       }
-      return `${head}${getContent(node.content, typeHandlers)}${tail}`
+
+      return `${head}${getContent(node.children, typeHandlers)}${tail}`
     }
   }
 

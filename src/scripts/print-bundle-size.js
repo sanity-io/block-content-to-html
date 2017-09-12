@@ -1,10 +1,10 @@
-/* eslint-disable no-console */
-import fs from 'fs'
-import path from 'path'
-import boxen from 'boxen'
-import chalk from 'chalk'
-import gzipSize from 'gzip-size'
-import prettyBytes from 'pretty-bytes'
+/* eslint-disable no-console, array-element-newline */
+const fs = require('fs')
+const path = require('path')
+const boxen = require('boxen')
+const chalk = require('chalk')
+const gzipSize = require('gzip-size')
+const prettyBytes = require('pretty-bytes')
 
 const umdPath = path.join(__dirname, '..', '..', 'umd')
 const bundlePath = path.join(umdPath, 'index.js')
