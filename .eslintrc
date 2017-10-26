@@ -3,6 +3,8 @@
     "node": true,
     "browser": true
   },
-  "parser": "babel-eslint",
-  "extends": "sanity"
+  "extends": ["sanity", "prettier"],
+  "rules": {
+    "id-length": ["warn", {"exceptions": ["i", "j", "x", "y", "z", "h"], "min": 2}]
+  }
 }

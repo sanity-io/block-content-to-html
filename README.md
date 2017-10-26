@@ -1,259 +1,126 @@
-# block-content-to-html-js
+# block-content-to-html
 
-Converts the flat Sanity block content structure into HTML.
+Render an array of [block text](https://sanity.io/docs/schema-types/block-text-type) from Sanity to HTML.
 
-## Installation
-
-``npm install --save @sanity/block-content-to-html``
-
-## Quick example
-
-```js
-
-// The flat block content structure
-const data = {
-  "_type": "block",
-  "style": "normal",
-  "spans": [
-    {
-      "_type": "span",
-      "text": "String with an ",
-      "marks": []
-    },
-    {
-      "_type": "span",
-      "text": "italicized",
-      "marks": [
-        "em"
-      ]
-    },
-    {
-      "_type": "span",
-      "text": " word.",
-      "marks": []
-    }
-  ]
-}
-
-
-// Now convert it with block-content-to-html
-const BlockContentToHtml = require('@sanity/block-content-to-html')
-const toHtml = new BlockContentToHtml()
-
-const html = toHtml.convert(data)
-```
-
-This will result in ``html`` being:
-
-```html
-<p>String with an <em>italicized</em> word.</p>
-```
-
-
-## Interface
-
-The constructor will take an object for options:
-
-```js
-const toHtml = new BlockContentToHtml(options: Object)
-```
-
-Converting the block content is done by calling ``.convert``:
-
-```js
-toHtml.convert(data: Array|Object)
-```
-
-### Constructor options
-
-Options is an object with any of the following keys:
-
-```js
-{
-  customTypeHandlers: {
-    ...
-  },
-  blockTypeHandlers: {
-    textBlock: {
-      ...
-    },
-    listBlock: {
-      ...
-    },
-    span: {
-      ...
-    }
-    marks: {
-      ...
-    }
-  }
-}
+## Installing
 
 ```
-
-Read below for a closer description of each option.
-
-
-#### ``customTypeHandlers: Object``
-
-An object with keys for your custom block types (which is not of type ``block``).
-Each key is mapped to a type, and their value is a function which will get the node as input.
-It returns HTML.
-
-```js
-customTypeHandlers: {
-  author: node => {
-    return `<div>${node.attributes.name}</div>`
-  }
-}
+npm install --save @sanity/block-content-to-html
 ```
 
-The ``node`` in this example has the following structure:
+## Usage
 
 ```js
-{ type: 'author', attributes: { name: 'Test Person' } }
-```
-
-
-#### ``blockTypeHandlers: Object``
-
-Handlers for manipulating the output of the default, built in, block types.
-The default block type holds either a block of text or a list.
-A text block is built up of spans (with marks), where a list block is built up of list items,
-which can contain a text block.
-
-The ``blockTypeHandlers`` object can contain the follow keys:
-
-* ##### ``textBlock: Object``
-  Each text block has a ``style``. With this option you can manipulate how each style is rendered.
-  By default the style ``normal`` is wrapped in a ``<p>``,
-  where other default styles are mapped 1:1 (style ``h2`` produces ``<h2>``).
-
-  The option works in a similar way as ``customTypeHandlers`` described above,
-  with the distinction that is has a ``children`` property, and the key is the style name:
-
-  ```js
-  textBlock: {
-    normal: node => {
-      return `<p class="funky-paragraph">${node.children}</p>`
-    },
-    h2: node => {
-      return `<div class="big-heading">${node.children}</div>`
-    }
-  }
-  ```
-
-* ##### ``listBlock: Object``
-  By default lists are rendered with plain ``<ol>``, ``<ul>``and ``<li>`` tags.
-  With this option you can tweak them into your own liking.
-
-  The object takes the following keys:
-
-  ```js
-  listBlock: {
-    number: node => {
-      return `<ol class="article-list">${node.children}</ol>`
-    },
-    bullet: node => {
-      return `<ul class="article-list">${node.children}</ul>`
-    },
-    listItem: node => {
-      return `<li class="article-list-item">${node.children}</li>`
-    }
-  }
-  ```
-
-* ##### ``span: Object``
-  Let you tweak how spans within blocks are rendered. By default the spans are
-  just text and marks. As spans may have attributes with data, you can
-  make your own render which manipulates the output based on their attributes:
-
-  ```js
-  span: node => {
-    let result = ''
-    if (node.attributes.author) {
-      result = `
-        <div class="author-bio">
-          <img src="${node.attributes.author.image.url}" />
-          ${node.attributes.author.name}
-        </div>`
-    }
-    if (node.attributes.link) {
-      result += `<a href="${node.attributes.link.href}">${node.children}</a>`
-    }
-    if (Object.keys(node.attributes).length === 0) {
-      result = node.children
-    }
-    return result
-  }
-  ```
-
-* ##### ``marks: Object``
-  Marks are by default mapped 1:1. If the mark is 'em' the output will be ``<em>``.
-  With this option you can map marks to other tags, or just ignore them:
-
-  ```js
-  marks: {
-    em: null // Just igonore 'em' marks.
-    code: 'pre' // Render 'code' marks as 'pre' tags
-  }
-  ```
-
-## Custom data on the block content
-
-``block-content-to-html`` supports setting custom data on the original block content
-through setting a ``.extra`` property on a block element. This is handy if you want
-to generate and keep track of a HTML id attribute, or other arbitrary data related to rendering.
-
-The value can be anything you like.
-
-Example:
-
-```js
-const blockContent = {
-  "_type": "block",
-  "style": "h2",
-  "extra": "header_1234", // Our extra property added to the original content.
-  "spans": [
-    {
-      "_type": "span",
-      "text": "Such h2 header, much amaze",
-      "marks": []
-    }
-  ]
-}
-
-const toHtml = new BlockContentToHtml({
-  blockTypeHandlers: {
-    textBlock: {
-      h2: node => {
-        const htmlId = node.extra // Here it is available for us
-        return `<h2 id="${htmlId}">${node.children}</h2>`
-      }
-    }
-  }
+const blocksToHtml = require('@sanity/block-content-to-html')
+const client = require('@sanity/client')({
+  projectId: '<your project id>',
+  dataset: '<some dataset>',
+  useCdn: true
 })
 
-const html = toHtml.convert(blockContentdata)
+// `h` is a way to build HTML known as hyperscript
+// See https://github.com/hyperhype/hyperscript for more info
+const h = blocksToHtml.h
 
+const serializers = {
+  types: {
+    code: props => (
+      h('pre', {className: props.node.language},
+        h('code', props.node.code)
+      )
+    )
+  }
+}
+
+client.fetch('*[_type == "article"][0]').then(article => {
+  const el = blocksToHtml({
+    blocks: article.body,
+    serializers: serializers
+  })
+
+  document.getElementById('root').appendChild(el)
+})
 ```
 
-Resulting in ``html`` being:
+## Options
 
-```html
-<h2 id="header_1234">Such h2 header, much amaze</h2>
-```
+- `className` - When more than one block is given, a container node has to be created. Passing a `className` will pass it on to the container. Note that if only a single block is given as input, the container node will be skipped.
+- `serializers` - Specifies the functions to use for rendering content. Merged with default serializers.
+- `serializers.types` - Serializers for block types, see example above
+- `serializers.marks` - Serializers for marks - data that annotates a text child of a block. See example usage below.
+- `serializers.list` - Function to use when rendering a list node
+- `serializers.listItem` - Function to use when rendering a list item node
+- `serializers.hardBreak` - Function to use when transforming newline characters to a hard break (`<br/>` by default, pass `false` to render newline character)
+- `imageOptions` - When encountering image blocks, this defines which query parameters to apply in order to control size/crop mode etc.
 
-## Utility function
+In addition, in order to render images without materializing the asset documents, you should also specify:
+
+- `projectId` - The ID of your Sanity project.
+- `dataset` - Name of the Sanity dataset containing the document that is being rendered.
+
+## Examples
+
+### Rendering custom marks
+
 ```js
-BlockContentToHtml.escapeHtml(unsafe: string)
+const input = [{
+  _type: 'block',
+  children: [{
+    _key: 'a1ph4',
+    _type: 'span',
+    marks: ['s0m3k3y'],
+    text: 'Sanity'
+  }],
+  markDefs: [{
+    _key: 's0m3k3y',
+    _type: 'highlight',
+    color: '#E4FC5B'
+  }]
+}]
+
+const highlight = props => (
+  h('span', {style: {backgroundColor: props.mark.color}}, props.children)
+)
+
+const content = blocksToHtml({
+  blocks: input,
+  serializers: {marks: {highlight}}
+})
 ```
-Escape unsafe text to HTML safe text. To be used with your own handler functions.
 
-## More information / examples
+### Specifying image options
 
-Please see the tests.
+```js
+blocksToHtml({
+  blocks: input,
+  imageOptions: {w: 320, h: 240, fit: 'max'},
+  projectId: 'myprojectid',
+  dataset: 'mydataset',
+})
+```
+
+### Customizing default serializer for `block`-type
+
+```js
+const BlockRenderer = props => {
+  const style = props.node.style || 'normal'
+
+  if (/^h\d/.test(style)) {
+    const level = style.replace(/[^\d]/g, '')
+    return h('h2', {className: `my-heading level-${level}`}, props.children)
+  }
+
+  return style === 'blockquote'
+    ? h('blockquote', {className: 'my-block-quote'}, props.children)
+    : h('p', {className: 'my-paragraph'}, props.children)
+}
+
+blocksToHtml({
+  blocks: input,
+  serializers: {types: {block: BlockRenderer}}
+})
+```
 
 ## License
 
-MIT-licensed
+MIT-licensed. See LICENSE.

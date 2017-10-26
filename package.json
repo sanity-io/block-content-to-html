@@ -1,58 +1,55 @@
 {
   "name": "@sanity/block-content-to-html",
-  "description": "Customizable HTML parser for block editor output",
-  "version": "0.4.0",
-  "main": "lib/index.js",
-  "umd": "umd/index.min.js",
+  "description": "Function for transforming Sanity block content to HTML",
+  "version": "1.2.0",
+  "main": "lib/blocksToHtml.js",
+  "umd": "umd/blocksToHtml.min.js",
   "scripts": {
-    "browserify": "NODE_ENV=production BROWSERIFY_ENV=build DEBUG='' browserify -t envify -g uglifyify lib/index.js -o umd/index.js --standalone=BlockContentAdapter",
-    "build": "npm run clean && npm run compile && npm run browserify && npm run minify && npm run size",
-    "size": "node -r babel-register src/scripts/print-bundle-size",
+    "browserify":
+      "NODE_ENV=production BROWSERIFY_ENV=build DEBUG='' browserify -t envify -g uglifyify lib/blocksToHtml.js -o umd/blocksToHtml.js --standalone=blocksToHtml",
+    "build": "npm run clean && npm run compile && npm run browserify && npm run minify",
     "watch": "npm run compile -- --watch",
     "clean": "rimraf lib coverage .nyc_output umd/*.js",
     "compile": "babel --source-maps --copy-files -d lib/ src/",
-    "coverage": "DEBUG=sanity NODE_ENV=test nyc --reporter=html --reporter=lcov --reporter=text npm test",
-    "minify": "uglifyjs -c -m -- umd/index.js > umd/index.min.js",
+    "coverage": "npm test -- --coverage",
+    "minify": "uglifyjs -c -m -- umd/blocksToHtml.js > umd/blocksToHtml.min.js",
     "postpublish": "npm run clean",
     "posttest": "eslint .",
-    "prepublish": "in-publish && npm run build || not-in-publish",
-    "test": "tap --node-arg=--require --node-arg=babel-register test/*.test.js"
+    "prepublishOnly": "npm run build",
+    "test": "jest"
   },
   "keywords": [],
   "author": "Sanity <hello@sanity.io>",
   "license": "MIT",
   "dependencies": {
-    "@sanity/block-content-to-tree": "^0.3.0",
-    "in-publish": "^2.0.0"
+    "@sanity/block-content-to-hyperscript": "^1.2.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.22.2",
+    "@sanity/block-content-tests": "^0.0.3",
+    "babel-cli": "^6.26.0",
     "babel-eslint": "^7.1.1",
-    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "babel-preset-es2015": "^6.22.0",
-    "babel-register": "^6.22.0",
-    "boxen": "^1.2.1",
+    "babel-preset-env": "^1.6.0",
     "browserify": "^14.4.0",
-    "chalk": "^2.1.0",
-    "envify": "^4.0.0",
+    "envify": "^4.1.0",
     "eslint": "^4.6.1",
+    "eslint-config-prettier": "^2.4.0",
     "eslint-config-sanity": "^3.0.1",
-    "eslint-plugin-import": "^2.2.0",
-    "gzip-size": "^4.0.0",
-    "nyc": "^11.2.1",
-    "pretty-bytes": "^4.0.2",
-    "rimraf": "^2.5.4",
-    "tap": "^10.7.2",
+    "eslint-plugin-import": "^2.7.0",
+    "jest": "^21.0.2",
+    "prettier": "^1.7.0",
+    "rimraf": "^2.6.2",
     "uglify-js": "^3.1.0",
     "uglifyify": "^4.0.3"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sanity-io/block-content-to-html-js.git"
+    "url": "git+https://github.com/sanity-io/block-content-to-html.git"
   },
   "bugs": {
-    "url": "https://github.com/sanity-io/block-content-to-html-js/issues"
+    "url": "https://github.com/sanity-io/block-content-to-html/issues"
   },
-  "homepage": "https://github.com/sanity-io/block-content-to-html-js#readme"
+  "homepage": "https://github.com/sanity-io/block-content-to-html#readme",
+  "jest": {
+    "collectCoverageFrom": ["src/**/*.js"]
+  }
 }
