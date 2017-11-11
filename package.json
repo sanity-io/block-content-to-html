@@ -21,12 +21,12 @@
   "author": "Sanity <hello@sanity.io>",
   "license": "MIT",
   "dependencies": {
-    "@sanity/block-content-to-hyperscript": "^1.2.0"
+    "@sanity/block-content-to-hyperscript": "^1.2.3"
   },
   "devDependencies": {
-    "@sanity/block-content-tests": "^0.0.3",
+    "@sanity/block-content-tests": "^0.0.4",
     "babel-cli": "^6.26.0",
-    "babel-eslint": "^7.1.1",
+    "babel-eslint": "^8.0.2",
     "babel-preset-env": "^1.6.0",
     "browserify": "^14.4.0",
     "envify": "^4.1.0",
