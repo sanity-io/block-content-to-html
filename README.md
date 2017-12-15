@@ -1,6 +1,6 @@
 # block-content-to-html
 
-Render an array of [block text](https://sanity.io/docs/schema-types/block-text-type) from Sanity to HTML.
+Render an array of [block text](https://www.sanity.io/docs/schema-types/block-type) from Sanity to HTML.
 
 ## Installing
 
