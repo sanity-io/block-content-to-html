@@ -1,7 +1,7 @@
 {
   "name": "@sanity/block-content-to-html",
   "description": "Function for transforming Sanity block content to HTML",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "main": "lib/blocksToHtml.js",
   "umd": "umd/blocksToHtml.min.js",
   "unpkg": "umd/blocksToHtml.min.js",
