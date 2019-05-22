@@ -1,4 +1,4 @@
-const blocksToHyperScript = require('@sanity/block-content-to-hyperscript')
+const blocksToHyperScript = require('@sanity/hyperscript-portabletext')
 
 const h = blocksToHyperScript.renderNode
 const blocksToHtml = options => {

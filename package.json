@@ -1,7 +1,7 @@
 {
-  "name": "@sanity/block-content-to-html",
-  "description": "Function for transforming Sanity block content to HTML",
-  "version": "1.3.8",
+  "name": "@sanity/html-portabletext",
+  "description": "Function for transforming Portable Text to HTML",
+  "version": "2.0.0",
   "main": "lib/blocksToHtml.js",
   "umd": "umd/blocksToHtml.min.js",
   "unpkg": "umd/blocksToHtml.min.js",
@@ -22,7 +22,7 @@
   "author": "Sanity <hello@sanity.io>",
   "license": "MIT",
   "dependencies": {
-    "@sanity/block-content-to-hyperscript": "^2.0.5"
+    "@sanity/block-content-to-hyperscript": "^2.0.7"
   },
   "devDependencies": {
     "@sanity/block-content-tests": "^0.2.0",
@@ -43,12 +43,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sanity-io/block-content-to-html.git"
+    "url": "git+https://github.com/sanity-io/html-portabletext.git"
   },
   "bugs": {
-    "url": "https://github.com/sanity-io/block-content-to-html/issues"
+    "url": "https://github.com/sanity-io/html-portabletext/issues"
   },
-  "homepage": "https://github.com/sanity-io/block-content-to-html#readme",
+  "homepage": "https://github.com/sanity-io/html-portabletext#readme",
   "jest": {
     "testURL": "http://localhost",
     "collectCoverageFrom": [

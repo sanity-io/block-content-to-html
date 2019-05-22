@@ -1,17 +1,17 @@
-# block-content-to-html
+# html-portabletext
 
-Render an array of [block text](https://www.sanity.io/docs/schema-types/block-type) from Sanity to HTML.
+Render [Portable Text](https://www.sanity.io/docs/content-studio/what-you-need-to-know-about-block-text) from Sanity to HTML.
 
 ## Installing
 
 ```
-npm install --save @sanity/block-content-to-html
+npm install --save @sanity/html-portabletext
 ```
 
 ## Usage
 
 ```js
-const blocksToHtml = require('@sanity/block-content-to-html')
+const blocksToHtml = require('@sanity/html-portabletext')
 const client = require('@sanity/client')({
   projectId: '<your project id>',
   dataset: '<some dataset>',
