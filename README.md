@@ -51,6 +51,7 @@ client.fetch('*[_type == "article"][0]').then(article => {
 - `serializers.list` - Function to use when rendering a list node
 - `serializers.listItem` - Function to use when rendering a list item node
 - `serializers.hardBreak` - Function to use when transforming newline characters to a hard break (`<br/>` by default, pass `false` to render newline character)
+- `serializers.container` - Function to use as the container for the resulting HTML string (`div` by default). If you don't want a container, specify a custom tag and run a `string.replace(/(TAG REGEX)/g, '')` function in the final string to remove it.
 - `imageOptions` - When encountering image blocks, this defines which query parameters to apply in order to control size/crop mode etc.
 
 In addition, in order to render images without materializing the asset documents, you should also specify:
