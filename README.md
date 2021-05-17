@@ -15,6 +15,7 @@ const blocksToHtml = require('@sanity/block-content-to-html')
 const client = require('@sanity/client')({
   projectId: '<your project id>',
   dataset: '<some dataset>',
+  apiVersion: '2021-03-25',
   useCdn: true
 })
 
@@ -51,7 +52,10 @@ client.fetch('*[_type == "article"][0]').then(article => {
 - `serializers.list` - Function to use when rendering a list node
 - `serializers.listItem` - Function to use when rendering a list item node
 - `serializers.hardBreak` - Function to use when transforming newline characters to a hard break (`<br/>` by default, pass `false` to render newline character)
+- `serializers.unknownType` - Override the default serializer for blocks of unknown type, if `ignoreUnknownTypes` is set to `false` (the default).
+- `serializers.unknownMark` - Override the default serializer for marks of unknown type. Defaults to a span without any styling.
 - `imageOptions` - When encountering image blocks, this defines which query parameters to apply in order to control size/crop mode etc.
+- `ignoreUnknownTypes` - By default (or when setting this property explicitly to `true`) it will output a hidden `<div>` with a warning. By setting this property to `false`, the renderer will throw an error when encountering unknown block types. The behavior of the unknown type rendering can be customized by specifying a serializer with `serializers.unknownType`.
 
 In addition, in order to render images without materializing the asset documents, you should also specify:
 

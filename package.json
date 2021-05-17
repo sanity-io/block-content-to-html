@@ -22,24 +22,24 @@
   "author": "Sanity <hello@sanity.io>",
   "license": "MIT",
   "dependencies": {
-    "@sanity/block-content-to-hyperscript": "^2.0.5"
+    "@sanity/block-content-to-hyperscript": "^3.0.0"
   },
   "devDependencies": {
-    "@sanity/block-content-tests": "^0.2.0",
-    "babel-cli": "^6.26.0",
-    "babel-eslint": "^8.2.5",
-    "babel-preset-env": "^1.7.0",
-    "browserify": "^14.4.0",
+    "@babel/cli": "^7.13.16",
+    "@babel/preset-env": "^7.14.2",
+    "@sanity/block-content-tests": "^0.3.0",
+    "babel-eslint": "^10.1.0",
+    "browserify": "^17.0.0",
     "envify": "^4.1.0",
-    "eslint": "^4.19.1",
-    "eslint-config-prettier": "^2.4.0",
-    "eslint-config-sanity": "^3.0.1",
+    "eslint": "^7.26.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-sanity": "^5.1.0",
     "eslint-plugin-import": "^2.13.0",
-    "jest": "^22.0.4",
-    "prettier": "^1.14.2",
-    "rimraf": "^2.6.2",
+    "jest": "^26.6.3",
+    "prettier": "^2.3.0",
+    "rimraf": "^3.0.2",
     "uglify-js": "^3.4.8",
-    "uglifyify": "^4.0.3"
+    "uglifyify": "^5.0.2"
   },
   "repository": {
     "type": "git",
