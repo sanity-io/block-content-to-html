@@ -2,6 +2,8 @@
 
 Render an array of [block text](https://www.sanity.io/docs/schema-types/block-type) from Sanity to HTML.
 
+**⚠️ Note:** This package is deprecated. We recommend migrating to its modernized successor, [@portabletext/to-html](https://github.com/portabletext/to-html).
+
 ## Installing
 
 ```
